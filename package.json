@@ -13,6 +13,7 @@
     "@types/koa-bodyparser": "^5.0.1",
     "@types/koa-multer": "^1.0.0",
     "@types/koa-router": "^7.0.32",
+    "axios": "^0.18.0",
     "kcors": "^2.2.2",
     "koa": "^2.5.3",
     "koa-bodyparser": "^4.2.1",
