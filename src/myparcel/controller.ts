@@ -1,4 +1,5 @@
 import Axios from 'axios'
+import { sendToPrinter } from '../printer/controller'
 
 import { 
   printPDFBuffer 
@@ -10,7 +11,7 @@ import {
   CREDENTIALS
 } from '../lib/common'
 
-const AxiosAuth = async () => Axios.create({
+export const AxiosAuth = async () => Axios.create({
   baseURL: BASE_URL,
   headers: {
     Authorization: await Axios.post(BASE_URL_AUTH, CREDENTIALS).then(resp => `${resp.data.token_type} ${resp.data.access_token}`),
@@ -21,8 +22,8 @@ const AxiosAuth = async () => Axios.create({
 
 export const getShipments = (axios, date) => {
   return axios
-    .get(`${BASE_URL}/shipments?filter[search]=2018-10-05&include=shipment_status`)
-    .then(response =>  response.data)
+    .get(`${BASE_URL}/shipments?filter[search]=${date}&include=shipment_status`)
+    .then(response =>  response.data.data.length)
     .catch(err => console.error(err))
 }
 
@@ -55,20 +56,29 @@ export const getContent = (axios, fileId) => {
     .catch(err => console.log(err))
 }
 
-export const printLabels = () =>{ 
-    //AxiosAuth().then(async axios => {
-    //    let shipments = await getShipments(axios,'2018-10-5')
+export const  printLabels = (date) =>{
+     return AxiosAuth()
+      .then(axios => getShipments(axios, date))
+      .then(labels => sendToPrinter(labels))
+      .then(resp => resp)
 
-    //     let ShipmentsAfterPatch = <any> await Promise.all(shipments.data.map(shipment => registerShipment(axios, shipment)))
-  
+      //  .then(resp => console.log(resp))
+      //  .catch(err => console.log(err))
+      //).catch(err => console.log(err))
+}
+
+export const countLabels = () => {
+   return Promise.resolve('Welcome to API')
+   //.then(res => console.log('welcome', res))
+}
+
+
+//      //     let ShipmentsAfterPatch = <any> await Promise.all(shipments.data.map(shipment => registerShipment(axios, shipment)))
+    
+      
     //     let ShipmentsAfterPatch1 = <any> await Promise.all(ShipmentsAfterPatch.map(x=> getFile(axios, x.data.id)))
 
     //     let ShipmentAfterPatch2 = <any> await Promise.all(ShipmentsAfterPatch1.map(y => getContent(axios, y.data[0].id)))
 
-        
-
-    // })
-    return 'Labels printed'
-}
-
-
+        //console.log(shipments)
+        //return shipments

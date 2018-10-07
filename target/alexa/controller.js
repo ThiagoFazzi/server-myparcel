@@ -8,20 +8,37 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
 const routing_controllers_1 = require("routing-controllers");
 const controller_1 = require("../myparcel/controller");
 let AlexaController = class AlexaController {
-    allLabels() {
-        return controller_1.printLabels();
+    allLabels(date) {
+        return controller_1.printLabels(date)
+            .then(resp => resp);
+    }
+    welcome() {
+        return controller_1.countLabels()
+            .then(res => res);
     }
 };
 __decorate([
-    routing_controllers_1.Get('/labels'),
+    routing_controllers_1.Get('/labels/:date'),
+    routing_controllers_1.HttpCode(200),
+    __param(0, routing_controllers_1.Param('date')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AlexaController.prototype, "allLabels", null);
+__decorate([
+    routing_controllers_1.Get('/'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], AlexaController.prototype, "allLabels", null);
+], AlexaController.prototype, "welcome", null);
 AlexaController = __decorate([
     routing_controllers_1.JsonController()
 ], AlexaController);
