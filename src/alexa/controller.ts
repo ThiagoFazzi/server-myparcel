@@ -1,13 +1,11 @@
-//get label
 import 'reflect-metadata'
 import { JsonController, Get, NotFoundError, Param, HttpCode} from 'routing-controllers';
-import { printLabels, countLabels, AxiosAuth, getShipments } from '../myparcel/controller';
-// import Comment from './entity';
+import { printLabels, countLabels } from '../myparcel/controller';
 
 @JsonController()
 export default class AlexaController {
 
-  @Get('/labels/:date')
+  @Get('/labels/print/:date')
   @HttpCode(200)
     allLabels(
     @Param('date') date: String
@@ -16,17 +14,12 @@ export default class AlexaController {
         .then( resp => resp)
   }
 
-  @Get('/')
-  welcome() {
-    return countLabels()
-    .then(res => res)
+  @Get('/labels/count/:date')
+  @HttpCode(200)
+    getCountLabelsByDate(
+      @Param('date') date: String
+  ) {
+    return countLabels(date)
+    .then(resp => resp)
   }
-
-    // @Get('/comments/:id')
-    // getComment(
-    //     @Param('id') id: number
-    // ) {
-    //     return Comment.findOne(id)
-    // }
-
 }

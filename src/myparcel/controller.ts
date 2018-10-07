@@ -23,7 +23,7 @@ export const AxiosAuth = async () => Axios.create({
 export const getShipments = (axios, date) => {
   return axios
     .get(`${BASE_URL}/shipments?filter[search]=${date}&include=shipment_status`)
-    .then(response =>  response.data.data.length)
+    .then(response =>  response.data.data)
     .catch(err => console.error(err))
 }
 
@@ -57,28 +57,24 @@ export const getContent = (axios, fileId) => {
 }
 
 export const  printLabels = (date) =>{
-     return AxiosAuth()
-      .then(axios => getShipments(axios, date))
-      .then(labels => sendToPrinter(labels))
-      .then(resp => resp)
+  return AxiosAuth()
+  .then(axios => getShipments(axios, date))
+  
+  //Logic to get files from myParcel.com
 
-      //  .then(resp => console.log(resp))
-      //  .catch(err => console.log(err))
-      //).catch(err => console.log(err))
+  .then(labels => sendToPrinter(labels))
+  .then(resp => resp)
+  .catch(err => console.log(err))
 }
 
-export const countLabels = () => {
-   return Promise.resolve('Welcome to API')
-   //.then(res => console.log('welcome', res))
+export const countLabels = (date) => {
+  return AxiosAuth()
+  .then(axios => getShipments(axios, date))
+  .then(resp => resp.length)
+  .catch(err => console.log(err))
 }
 
 
-//      //     let ShipmentsAfterPatch = <any> await Promise.all(shipments.data.map(shipment => registerShipment(axios, shipment)))
-    
-      
-    //     let ShipmentsAfterPatch1 = <any> await Promise.all(ShipmentsAfterPatch.map(x=> getFile(axios, x.data.id)))
-
-    //     let ShipmentAfterPatch2 = <any> await Promise.all(ShipmentsAfterPatch1.map(y => getContent(axios, y.data[0].id)))
-
-        //console.log(shipments)
-        //return shipments
+//let ShipmentsAfterPatch = <any> await Promise.all(shipments.data.map(shipment => registerShipment(axios, shipment)))      
+//let ShipmentsAfterPatch1 = <any> await Promise.all(ShipmentsAfterPatch.map(x=> getFile(axios, x.data.id)))
+//let ShipmentAfterPatch2 = <any> await Promise.all(ShipmentsAfterPatch1.map(y => getContent(axios, y.data[0].id)))

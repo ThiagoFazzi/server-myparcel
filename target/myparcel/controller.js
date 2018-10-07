@@ -15,7 +15,7 @@ exports.AxiosAuth = async () => axios_1.default.create({
 exports.getShipments = (axios, date) => {
     return axios
         .get(`${common_1.BASE_URL}/shipments?filter[search]=${date}&include=shipment_status`)
-        .then(response => response.data.data.length)
+        .then(response => response.data.data)
         .catch(err => console.error(err));
 };
 exports.registerShipment = (axios, shipment) => {
@@ -48,9 +48,13 @@ exports.printLabels = (date) => {
     return exports.AxiosAuth()
         .then(axios => exports.getShipments(axios, date))
         .then(labels => controller_1.sendToPrinter(labels))
-        .then(resp => resp);
+        .then(resp => resp)
+        .catch(err => console.log(err));
 };
-exports.countLabels = () => {
-    return Promise.resolve('Welcome to API');
+exports.countLabels = (date) => {
+    return exports.AxiosAuth()
+        .then(axios => exports.getShipments(axios, date))
+        .then(resp => resp.length)
+        .catch(err => console.log(err));
 };
 //# sourceMappingURL=controller.js.map

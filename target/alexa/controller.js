@@ -20,13 +20,13 @@ let AlexaController = class AlexaController {
         return controller_1.printLabels(date)
             .then(resp => resp);
     }
-    welcome() {
-        return controller_1.countLabels()
-            .then(res => res);
+    getCountLabelsByDate(date) {
+        return controller_1.countLabels(date)
+            .then(resp => resp);
     }
 };
 __decorate([
-    routing_controllers_1.Get('/labels/:date'),
+    routing_controllers_1.Get('/labels/print/:date'),
     routing_controllers_1.HttpCode(200),
     __param(0, routing_controllers_1.Param('date')),
     __metadata("design:type", Function),
@@ -34,11 +34,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AlexaController.prototype, "allLabels", null);
 __decorate([
-    routing_controllers_1.Get('/'),
+    routing_controllers_1.Get('/labels/count/:date'),
+    routing_controllers_1.HttpCode(200),
+    __param(0, routing_controllers_1.Param('date')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], AlexaController.prototype, "welcome", null);
+], AlexaController.prototype, "getCountLabelsByDate", null);
 AlexaController = __decorate([
     routing_controllers_1.JsonController()
 ], AlexaController);

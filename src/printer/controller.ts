@@ -1,5 +1,6 @@
 export const sendToPrinter = (labels) => {
-    //post to Printer server
     console.log(labels)
+    //conect printer to send files
+    //wait response or error to send to alexa
     return Promise.resolve('LABELS PRINTED')
 }
