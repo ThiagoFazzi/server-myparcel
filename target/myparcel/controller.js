@@ -44,9 +44,14 @@ exports.getContent = (axios, fileId) => {
         .then(response => { printer_1.printPDFBuffer(Buffer.from(response.data, 'base64')); })
         .catch(err => console.log(err));
 };
+const createFiles = async (date) => {
+    let axios = await exports.AxiosAuth();
+    let shipments = await exports.getShipments(axios, date);
+    console.log('createFiles', shipments);
+    return shipments;
+};
 exports.printLabels = (date) => {
-    return exports.AxiosAuth()
-        .then(axios => exports.getShipments(axios, date))
+    return createFiles(date)
         .then(labels => controller_1.sendToPrinter(labels))
         .then(resp => resp)
         .catch(err => console.log(err));
