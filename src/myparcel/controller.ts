@@ -34,19 +34,20 @@ export const registerShipment = (axios, shipment) => {
   }
   return axios
     .patch(`${BASE_URL}/shipments/${shipment.id}`,ship)
-    .then(response =>  response.data)
+    .then(response =>  response.data.data)
     .catch(err => console.error(err))
 }
 
-export const getFile = (axios, shipment) => {
+export const getFile = (axios, shipmentId) => {
   return axios
-    .get(`${BASE_URL}/shipments/${shipment}/files`)
-    .then(response =>  response.data)
+    .get(`${BASE_URL}/shipments/${shipmentId}/files`)
+    .then(response =>  response.data.data)
     .catch(err => console.error(err))
 }
 
 export const getContent = (axios, fileId) => {
   return axios.get(`${BASE_URL}/files/${fileId}`, {
+    responseType: 'arraybuffer',
     headers: {
       Accept: 'application/pdf',
       ContentType: 'application/pdf' 
@@ -56,24 +57,18 @@ export const getContent = (axios, fileId) => {
     .catch(err => console.log(err))
 }
 
-
 const createFiles  = async(date) => { 
   let axios  =  await AxiosAuth() 
-  let shipments = await getShipments(axios, date)
-  console.log('createFiles',shipments)
-  return shipments
-  //let shipmentsRegistered = await registerShipment(axios, shipments)
+  return  await getShipments(axios, date)
+    .then(shipments => Promise.all(shipments.map(shipment => registerShipment(axios, shipment))))
+    .then(shipmentsRegistered => Promise.all(shipmentsRegistered.map(shipmentRegistered => getFile(axios, shipmentRegistered.id))))
+    .then(shipmentsFiles => Promise.all(shipmentsFiles.map(shipmentFile => shipmentFile.map(shipmentFileId => getContent(axios, shipmentFileId.id)))))
+    .catch(error => console.log(error))
 }
 
 
 export const  printLabels = (date) =>{
-  //return AxiosAuth()
-  //  .then(axios => getShipments(axios, date))
-  //  .then(shipments => shipments)
-   return createFiles(date)
-  
-    //Logic to get files from myParcel.com
-
+   return createFiles(date)  
     .then(labels => sendToPrinter(labels))
     .then(resp => resp)
     .catch(err => console.log(err))
@@ -87,6 +82,13 @@ export const countLabels = (date) => {
 }
 
 
-//let ShipmentsAfterPatch = <any> await Promise.all(shipments.data.map(shipment => registerShipment(axios, shipment)))      
-//let ShipmentsAfterPatch1 = <any> await Promise.all(ShipmentsAfterPatch.map(x=> getFile(axios, x.data.id)))
-//let ShipmentAfterPatch2 = <any> await Promise.all(ShipmentsAfterPatch1.map(y => getContent(axios, y.data[0].id)))
+
+
+
+
+
+
+
+
+
+
